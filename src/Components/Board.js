@@ -3,8 +3,6 @@ import { withRouter } from 'react-router';
 import GameEngine from './GameEngine';
 
 class Board extends Component {
-    gameEngine = null;
-
     state = {
         name: '',
         numberOfAttemps: 0,
@@ -24,11 +22,12 @@ class Board extends Component {
             level: this.props.history.location.state.level
         };
         this.gameEngine = new GameEngine(this.setup);
+        this.RowsCaption =  ['A','B','C','D','E','F','G','H','I','J'];
     }
 
     onClickCellHandler = (event) => {
       let id =  event.target.id;
-      let result = this.gameEngine.checkPointClicked(id.charAt(0), id.substr(1));
+      let result = this.gameEngine.checkPointClicked(Number(id.substr(1)), this.RowsCaption.findIndex(item => item === id.charAt(0)) + 1);
       console.log(result);
       if (result === 'L') {
           document.getElementById(id).style.backgroundColor = "black";
@@ -41,7 +40,7 @@ class Board extends Component {
     
         const xItemsArray =  Array.apply(null, {length: this.setup.columns}).map(Number.call, Number);
         const yItemsArray =  Array.apply(null, {length: this.setup.rows}).map(Number.call, Number);
-        const RowsCaption =  ['A','B','C','D','E','F','G','H','I','J'];
+        
 
 
         return (
@@ -54,9 +53,9 @@ class Board extends Component {
                 {
                 yItemsArray.map((y) => {
                 return (<div>
-                            <span className="cellHeader">{RowsCaption[y]}</span>
+                            <span className="cellHeader">{this.RowsCaption[y]}</span>
                             {xItemsArray.map((x) => {
-                                return (<span className="cell" onClick ={this.onClickCellHandler} id={RowsCaption[y]+(x+1)} ></span>)
+                                return (<span className="cell" onClick ={this.onClickCellHandler} id={this.RowsCaption[y]+(x+1)} ></span>)
                             })
                             }
                         </div>) 

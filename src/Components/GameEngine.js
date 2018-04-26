@@ -1,166 +1,162 @@
-function checkOverlaps (setupShips, newShipConfig) {
-    let Result = -1;
-    setupShips.some((ship, index)=>{
-        if(newShipConfig.orientation = 'P') {
-            if(ship.PointA.Row === newShipConfig.PointA.Row 
-                && newShipConfig.PointA.Column >= ship.PointA.Column 
-                && newShipConfig.PointA.Column <= ship.PointB.Column) {
-                    Result = index;
-                    return Result;
-                } else {
-                    if(ship.PointA.Column === newShipConfig.PointA.Column 
-                        && newShipConfig.PointA.Row >= ship.PointA.Row 
-                        && newShipConfig.PointA.Row <= ship.PointB.Row) {
-                            Result = index;
-                            return Result;
-                        }
-                }
-        } else {
-
-            if(ship.orientation === newShipConfig.orientation) {
-                if(ship.orientation === 'H') {
-                    if ((ship.PointA.Row === newShipConfig.PointA.Row) && (newShipConfig.PointA.Column >= ship.PointA.Column) 
-                    && (newShipConfig.PointA.Column <= ship.PointB.Column)) {
-                        Result = index;
-                        return Result;
-                    }
-                } else {
-                    if ((ship.PointA.Column === newShipConfig.PointA.Column) && (newShipConfig.PointA.Row >= ship.PointA.Row) 
-                    && (newShipConfig.PointA.Row <= ship.PointB.Row)) {
-                        Result = index;
-                        return Result;
-                    }
-                }
-            } else {
-                /*if((ship.pointA.Column <= newShipConfig.PointA.Row && ship.PointB.Column <= newShipConfig.PointB.Row) 
-                    && (ship.PointB.Column)*/
-
-            }
-        }
-    })
-
-    return Result;
-}
-class SetupShips {
-    ships = 
-      [{Quantity: 1, Length: 4},
-        {Quantity: 2, Length: 3},
-        {Quantity: 3, Length: 2},
-        {Quantity: 4, Length: 1}];
-    
-    constructor(setup){
-        this.setup = setup;
+class Coordinate {
+    constructor(x, y, touched) {
+        this.x = x;
+        this.y = y;
+        this.touched = touched;
     }
+
+    equals(testCoordinate) {
+         console.log('enter equals');
+        console.log(testCoordinate.x +','+ testCoordinate.y);
+        console.log(this.x +','+ this.y);
+        
+        let Result = (testCoordinate.x === this.x && testCoordinate.y === this.y) ;
+         console.log(Result);
+        console.log('end equals'); 
+        return Result;
+    }
+}
+
+class Ship {
+    constructor(length) {
+        this.length = length;
+        this.coordinates = [];
+    }
+
+    get Coordinates() {
+        return this.coordinates;
+    }
+
+    get Sunk() {
+        return !this.coordinates.some((coordinate) => {
+              return coordinate.touched === false;
+        });
+    }
+
     generateRandomNumber = (n) => {
         return Math.floor((Math.random() * n) + 1);
     }
 
-    generateNewShipConfig = (length) => {
-        let orientation = this.generateRandomNumber(2) === 1? 'H' : 'V';
-        let rows = this.setup.rows;
-        let columns = this.setup.columns;
-        let rowA, rowB = 0;
-        let columnA, columnB = 0;
-
-        if(orientation ==='H') {
-            rowA = this.generateRandomNumber(rows);
-
-            columnA = this.generateRandomNumber(columns + 1 -length);
-
-            rowB = rowA;
-            columnB = columnA + length -1;
-        }
-        else {
-            rowA = this.generateRandomNumber(rows + 1 - length);
-
-            columnA = this.generateRandomNumber(columns);
-
-            rowB = rowA + length -1;
-            columnB = columnA;
-        }
-
-        return {
-            Orientation: orientation,
-            PointA: {
-                Row: rowA,
-                Column: columnA
-            },
-            PointB: {
-                Row: rowB,
-                Column: columnB
-            }
-        };
+    cancelCandidateCoordinates = () => {
+        this.coordinates = [];
     }
 
-    
+    generateCandidateCoordinates = (rows, columns) => {
+        let orientation = this.generateRandomNumber(2) === 1? 'H' : 'V';
+        let row = 0;
+        let column = 0;
+
+        if(this.length === 1) {
+            row = this.generateRandomNumber(rows);
+
+            column = this.generateRandomNumber(columns + 1 -this.length);
+
+            let coordinate = new Coordinate(row, column, false);
+            this.coordinates.push(coordinate);                
+        } else {      
+
+            if(orientation ==='H') {
+                row = this.generateRandomNumber(rows);
+
+                column = this.generateRandomNumber(columns + 1 -this.length);
+
+                for (let index = 0; index < this.length; index++) {
+                    let coordinate = new Coordinate(row, column + index, false);
+                    this.coordinates.push(coordinate);                
+                }
+            }
+            else {
+                row = this.generateRandomNumber(rows + 1 - this.length);
+
+                column = this.generateRandomNumber(columns);
 
 
-    setupShips = () => {
-        const setupShips = [];
-
-        console.log("entra");
-        this.ships.forEach(ship => {
-            let newShipConfig = null;
-            let overlaps = null;
-            
-            do{
-                newShipConfig = this.generateNewShipConfig(ship.Length);
-                
-                overlaps = checkOverlaps(setupShips, newShipConfig);
-
-                if(overlaps > -1)
-                  newShipConfig = null;
-
-            } while(overlaps > -1);
-
-            setupShips.push(newShipConfig);
-            console.log(newShipConfig);
-        });
-
-        console.log(setupShips);
-        return setupShips;
+                for (let index = 0; index < this.length; index++) {            
+                    let coordinate = new Coordinate(row + index, column, false);
+                    this.coordinates.push(coordinate);                
+                }
+            }
+        }        
     }
 }
 
-class GameEngine {
-    setupShips = null;
-    userShips = null;
-    attemps = [];
+
+class Ships {
     constructor(setup){
         this.setup = setup;
-        this.setupShips = new SetupShips(setup);
-        this.userShips = this.setupShips.setupShips();
+        this.ships = [new Ship(4), 
+                      new Ship(3), new Ship(3), 
+                      new Ship(2), new Ship(2), new Ship(2),
+                      new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
+    }
+
+    checkOverlaps = (testCoordinates, testIndex) => {
+        console.log("start");
+       
+        for (let shipsIndex = 0; shipsIndex < this.ships.length; shipsIndex++) {
+            if(shipsIndex != testIndex) {
+                for (let coordinatesIndex = 0; coordinatesIndex < this.ships[shipsIndex].Coordinates.length; coordinatesIndex++) {
+                    for(let testIndex = 0; testIndex < testCoordinates.length; testIndex++){
+                        if(this.ships[shipsIndex].Coordinates[coordinatesIndex].equals(testCoordinates[testIndex])) {
+                            console.log('true');
+                            return true;               
+                        }
+                    }
+                }   
+            }         
+        }    
+        
+        console.log('false and finish');
+      return false;
+    }
+
+    setupShips = () => {
+        this.ships.forEach((ship, index) => {
+            let overlaps = false;
+            do{              
+                ship.generateCandidateCoordinates(this.setup.rows, this.setup.columns);
+                
+                overlaps = this.checkOverlaps(ship.Coordinates, index);
+
+                if(overlaps)
+                  ship.cancelCandidateCoordinates();
+
+            } while(overlaps);
+        });
+
+        console.log(this.ships);
+    }
+}
+
+class GameEngine {    
+    constructor(setup){
+        this.setup = setup;
+        this.setupShips = new Ships(setup);
+        this.setupShips.setupShips();
+        this.attempts = [];
     }
 
     checkPointClicked = (row, column) => {
-        let exists = false;
-
-        this.attemps.some(attemp => {
-            if (row === attemp.Row && column === attemp.Column) {
-              exists = true;
-              return exists;            
-            }
+        let exists = this.attempts.some(attempt => {
+            return (row === attempt.Row && column === attempt.Column);
         });
        
         if (!exists) {
-            this.attemps.push({Row: row, Column: column});
-
-            let overlaps = checkOverlaps(this.userShips, 
-                { orientation: 'P', 
-                  PointA: {Row: row, Column: column}, 
-                  PointB: {Row: row, Column: column}});
+            this.attempts.push({Row: row, Column: column});
+            let pointClicked = [];
+            pointClicked.push(new Coordinate(row, column, true));
+           // console.log(pointClicked);
+            let overlaps = this.setupShips.checkOverlaps( pointClicked);
             
-            if(overlaps > -1) {
+            if(overlaps) {
                 return 'L'; //Land
             } else {
                 return 'W'; //Water
             }
-
-        }
-        
-        
-    }   
-   
+        }else {
+            console.log('repited attempt');
+        }        
+    }      
 }
 
 export default GameEngine;
