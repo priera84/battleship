@@ -134,6 +134,15 @@ class GameEngine {
         this.setupShips = new Ships(setup);
         this.setupShips.setupShips();
         this.attempts = [];
+        this.onNewAttempt = setup.onNewAttempt;
+    }
+
+    get Attempts(){
+        return this.attempts.length;
+    }
+
+    onAttemptsIncreased(){
+        this.onNewAttempt();
     }
 
     checkPointClicked = (row, column) => {

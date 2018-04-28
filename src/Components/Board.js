@@ -1,33 +1,16 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import GameEngine from './GameEngine';
+
 
 class Board extends Component {
-    state = {
-        name: '',
-        numberOfAttemps: 0,
-        level: 'easy'
-    }
-
-    setup = {
-        rows: 10,
-        columns: 10
-    }
-
     constructor(props) {
-        super(props);
-        this.state = {
-            name: this.props.history.location.state.name,
-            numberOfAttemps: this.props.history.location.state.numberOfAttemps,
-            level: this.props.history.location.state.level
-        };
-        this.gameEngine = new GameEngine(this.setup);
+        super(props);       
         this.RowsCaption =  ['A','B','C','D','E','F','G','H','I','J'];
     }
 
     onClickCellHandler = (event) => {
       let id =  event.target.id;
-      let result = this.gameEngine.checkPointClicked(Number(id.substr(1)), this.RowsCaption.findIndex(item => item === id.charAt(0)) + 1);
+      let result = this.props.GameEngine.checkPointClicked(Number(id.substr(1)), this.RowsCaption.findIndex(item => item === id.charAt(0)) + 1);
       console.log(result);
       if (result === 'L') {
           document.getElementById(id).style.backgroundColor = "black";
@@ -38,8 +21,8 @@ class Board extends Component {
 
     render() {   
     
-        const xItemsArray =  Array.apply(null, {length: this.setup.columns}).map(Number.call, Number);
-        const yItemsArray =  Array.apply(null, {length: this.setup.rows}).map(Number.call, Number);
+        const xItemsArray =  Array.apply(null, {length: this.props.Columns}).map(Number.call, Number);
+        const yItemsArray =  Array.apply(null, {length: this.props.Rows}).map(Number.call, Number);
         
 
 
