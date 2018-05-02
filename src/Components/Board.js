@@ -1,23 +1,36 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 
+class BoardCell extends Component {
+    state = {
+        cellColor: 'aquamarine'
+    }
+
+    onClickCellHandler = (event) => {
+        //let id =  event.target.id;
+        let result = this.props.CheckPointClicked(this.props.Row, this.props.Column);
+       // console.log(result);
+        if (result === 'L') {
+            this.setState({cellColor :"black"});
+        } else if (result === 'W') {
+            this.setState({cellColor :"red"});
+        }
+      }
+
+      render() {
+          const style = {
+              backgroundColor: this.state.cellColor
+          }
+          return (<span className="cell" style={style} onClick={this.onClickCellHandler} ></span>);
+      }
+}
+
 
 class Board extends Component {
     constructor(props) {
         super(props);       
         this.RowsCaption =  ['A','B','C','D','E','F','G','H','I','J'];
-    }
-
-    onClickCellHandler = (event) => {
-      let id =  event.target.id;
-      let result = this.props.GameEngine.checkPointClicked(Number(id.substr(1)), this.RowsCaption.findIndex(item => item === id.charAt(0)) + 1);
-      console.log(result);
-      if (result === 'L') {
-          document.getElementById(id).style.backgroundColor = "black";
-      }else if (result === 'W'){
-        document.getElementById(id).style.backgroundColor =  "red";
-      }
-    }
+    }    
 
     render() {   
     
@@ -31,14 +44,14 @@ class Board extends Component {
             <span className="cellHeader" ></span>
             {
                 xItemsArray.map((x) => {
-                    return (<span className="cellHeader" >{x+1}</span>)
+                    return (<span key={x.toString()} className="cellHeader" >{x+1}</span>)
                 })}
                 {
                 yItemsArray.map((y) => {
-                return (<div>
-                            <span className="cellHeader">{this.RowsCaption[y]}</span>
+                return (<div key={y.toString()}>
+                            <span  className="cellHeader">{this.RowsCaption[y]}</span>
                             {xItemsArray.map((x) => {
-                                return (<span className="cell" onClick ={this.onClickCellHandler} id={this.RowsCaption[y]+(x+1)} ></span>)
+                                return (<BoardCell Row={y+1} Column={x+1} key={(x+y).toString()} CheckPointClicked={this.props.CheckPointClicked} />)
                             })
                             }
                         </div>) 

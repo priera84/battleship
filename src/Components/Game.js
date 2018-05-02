@@ -1,3 +1,7 @@
+import React, { Component } from 'react';
+import Board from './Board';
+import StatusSnippet from './StatusSnippet';
+
 class Coordinate {
     constructor(x, y, touched) {
         this.x = x;
@@ -6,14 +10,7 @@ class Coordinate {
     }
 
     equals(testCoordinate) {
-         console.log('enter equals');
-        console.log(testCoordinate.x +','+ testCoordinate.y);
-        console.log(this.x +','+ this.y);
-        
-        let Result = (testCoordinate.x === this.x && testCoordinate.y === this.y) ;
-         console.log(Result);
-        console.log('end equals'); 
-        return Result;
+        return  (testCoordinate.x === this.x && testCoordinate.y === this.y);
     }
 }
 
@@ -82,8 +79,9 @@ class Ship {
 
 
 class Ships {
-    constructor(setup){
-        this.setup = setup;
+    constructor(Rows, Columns){
+        this.rows = Rows;
+        this.columns = Columns;
         this.ships = [new Ship(4), 
                       new Ship(3), new Ship(3), 
                       new Ship(2), new Ship(2), new Ship(2),
@@ -91,14 +89,14 @@ class Ships {
     }
 
     checkOverlaps = (testCoordinates, testIndex) => {
-        console.log("start");
+        //console.log("start");
        
         for (let shipsIndex = 0; shipsIndex < this.ships.length; shipsIndex++) {
             if(shipsIndex != testIndex) {
                 for (let coordinatesIndex = 0; coordinatesIndex < this.ships[shipsIndex].Coordinates.length; coordinatesIndex++) {
                     for(let testIndex = 0; testIndex < testCoordinates.length; testIndex++){
                         if(this.ships[shipsIndex].Coordinates[coordinatesIndex].equals(testCoordinates[testIndex])) {
-                            console.log('true');
+                            //console.log('true');
                             return true;               
                         }
                     }
@@ -106,7 +104,7 @@ class Ships {
             }         
         }    
         
-        console.log('false and finish');
+       // console.log('false and finish');
       return false;
     }
 
@@ -114,7 +112,7 @@ class Ships {
         this.ships.forEach((ship, index) => {
             let overlaps = false;
             do{              
-                ship.generateCandidateCoordinates(this.setup.rows, this.setup.columns);
+                ship.generateCandidateCoordinates(this.rows, this.columns);
                 
                 overlaps = this.checkOverlaps(ship.Coordinates, index);
 
@@ -128,21 +126,25 @@ class Ships {
     }
 }
 
-class GameEngine {    
-    constructor(setup){
-        this.setup = setup;
-        this.setupShips = new Ships(setup);
+class Game extends Component { 
+    state = {
+        attempts: 0
+    }   
+    constructor(props){
+        super(props);
+        this.setupShips = new Ships(this.props.Rows, this.props.Columns);
         this.setupShips.setupShips();
         this.attempts = [];
-        this.onNewAttempt = setup.onNewAttempt;
     }
 
     get Attempts(){
         return this.attempts.length;
     }
 
-    onAttemptsIncreased(){
-        this.onNewAttempt();
+    increaseAttempts(){
+      this.setState((prevState) => {
+           return {attempts: prevState.attempts +1}
+       });
     }
 
     checkPointClicked = (row, column) => {
@@ -152,10 +154,11 @@ class GameEngine {
        
         if (!exists) {
             this.attempts.push({Row: row, Column: column});
+            this.increaseAttempts();
             let pointClicked = [];
             pointClicked.push(new Coordinate(row, column, true));
            // console.log(pointClicked);
-            let overlaps = this.setupShips.checkOverlaps( pointClicked);
+            let overlaps = this.setupShips.checkOverlaps(pointClicked);
             
             if(overlaps) {
                 return 'L'; //Land
@@ -166,6 +169,14 @@ class GameEngine {
             console.log('repited attempt');
         }        
     }      
+
+    render() {
+        return (
+            <div>
+                <Board Rows={this.props.Rows} Columns={this.props.Columns} CheckPointClicked={this.checkPointClicked} />
+                <StatusSnippet UserName={this.props.Name} MaximumAttempts={this.props.NumberOfAttemps} Attempts={this.state.attempts}/>
+            </div>);
+    }
 }
 
-export default GameEngine;
+export default Game;
