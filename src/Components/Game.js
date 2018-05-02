@@ -92,7 +92,7 @@ class Ships {
         //console.log("start");
        
         for (let shipsIndex = 0; shipsIndex < this.ships.length; shipsIndex++) {
-            if(shipsIndex != testIndex) {
+            if(shipsIndex !== testIndex) {
                 for (let coordinatesIndex = 0; coordinatesIndex < this.ships[shipsIndex].Coordinates.length; coordinatesIndex++) {
                     for(let testIndex = 0; testIndex < testCoordinates.length; testIndex++){
                         if(this.ships[shipsIndex].Coordinates[coordinatesIndex].equals(testCoordinates[testIndex])) {
@@ -173,8 +173,8 @@ class Game extends Component {
     render() {
         return (
             <div>
-                <Board Rows={this.props.Rows} Columns={this.props.Columns} CheckPointClicked={this.checkPointClicked} />
-                <StatusSnippet UserName={this.props.Name} MaximumAttempts={this.props.NumberOfAttemps} Attempts={this.state.attempts}/>
+                <StatusSnippet UserName={this.props.Name} MaximumAttempts={this.props.NumberOfAttemps} Level={this.props.Level} Attempts={this.state.attempts} />
+                <Board Rows={this.props.Rows} Columns={this.props.Columns} CheckPointClicked={this.checkPointClicked} />                
             </div>);
     }
 }

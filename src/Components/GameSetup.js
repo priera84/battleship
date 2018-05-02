@@ -7,11 +7,16 @@ class GameSetup extends Component {
     state = {
         name: "",
         numberOfAttemps: 0,
-        level: 'easy'
+        level: 'setup'
     }
    
     handleSubmit = (event) => {
-      event.preventDefault(); 
+      event.preventDefault();
+      if (this.state.level === "setup" && this.state.numberOfAttemps === 0) {
+          alert('you should either select a level or introduce the number of attempts you wanna try');
+          return false;
+      }
+
       this.props.history.push('/gameBoard', {name: this.state.name, numberOfAttemps: this.state.numberOfAttemps, level: this.state.level});
     }
     onNameChange = (event) => {
@@ -36,7 +41,8 @@ class GameSetup extends Component {
                     <p/>
                     <label>Introduce the number of attemps you want to try:</label>
                     <input type="number" placeholder="Enter number of attemps" onChange={this.onNumberOfAttempsChange} /><p/>
-                    <select value={this.state.level} onChange={this.onChangeLevel}>
+                    <label>or select a Level </label><select value={this.state.level} onChange={this.onChangeLevel}>
+                        <option value="setup"></option>
                         <option value="easy">Easy (Infinite attemps)</option>
                         <option value="medium">Medium (100 attemps)</option>
                         <option value="hard">Hard (50 attemps)</option>

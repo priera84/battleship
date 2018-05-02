@@ -8,10 +8,7 @@ class Setup extends Component {
     state = {
         splashScreenFinished: false
     }
-
-    componentDidMount() {
-        console.log(this.state);
-    }
+    
    showGameSetup = () => {
        let finished = !this.state.splashScreenFinished;
        this.setState({splashScreenFinished: finished});
