@@ -3,20 +3,20 @@ import React, { Component } from 'react';
 class StatusSnippet extends Component {
     render() {
         console.log(this.props.Level);
-        let MaximumAttempts = null;
+        let NumberOfAttemps = null;
         
         switch(this.props.Level) {
             case "easy": 
-                MaximumAttempts = "infinite";
+                NumberOfAttemps = "infinite";
                 break;
             case "medium": 
-                MaximumAttempts = "100";
+                NumberOfAttemps = "100";
                 break;
             case "hard": 
-                MaximumAttempts = "50";
+                NumberOfAttemps = "50";
                 break;
             case "setup": 
-                MaximumAttempts = this.props.MaximumAttempts.toString();
+                NumberOfAttemps = this.props.NumberOfAttemps.toString();
                 break;
             default:
                 break;
@@ -26,7 +26,7 @@ class StatusSnippet extends Component {
             <div className="snippet">
                 <p>User Name: {this.props.UserName}</p>
                 { this.props.Level !== "setup" && (<p>Level: {this.props.Level}</p>)}
-                <p>Attempts: {this.props.Attempts} out of {MaximumAttempts}</p>
+                <p>Attempts: {this.props.Attempts} out of {NumberOfAttemps}</p>
                
             </div>
         );

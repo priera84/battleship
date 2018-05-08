@@ -8,6 +8,7 @@ class GameBoard extends Component {
        return <Game Name={this.props.history.location.state.name}
                     NumberOfAttemps={this.props.history.location.state.numberOfAttemps}
                     Level={this.props.history.location.state.level}
+                    MaximumAttemptsAllowed={this.props.history.location.state.maximumAttemptsAllowed}
                     Rows={10}
                     Columns={10} />
     }

@@ -9,9 +9,14 @@ class Coordinate {
         this.touched = touched;
     }
 
-    equals(testCoordinate) {
+    equals = (testCoordinate) => {
         return  (testCoordinate.x === this.x && testCoordinate.y === this.y);
     }
+    
+    setTouched = (touched) => {
+        this.touched = touched;
+    }
+    
 }
 
 class Ship {
@@ -42,6 +47,8 @@ class Ship {
         let orientation = this.generateRandomNumber(2) === 1? 'H' : 'V';
         let row = 0;
         let column = 0;
+
+        this.coordinates = [];
 
         if(this.length === 1) {
             row = this.generateRandomNumber(rows);
@@ -88,6 +95,12 @@ class Ships {
                       new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
     }
 
+    allShipsSunk = () => {
+        return !this.ships.some(ship => {
+           return !ship.Sunk;             
+        });
+    }
+
     checkOverlaps = (testCoordinates, testIndex) => {
         //console.log("start");
        
@@ -106,6 +119,30 @@ class Ships {
         
        // console.log('false and finish');
       return false;
+    }
+
+
+
+    setShipTouched = (testCoordinates) => {
+        //console.log("start");
+       
+        for (let shipsIndex = 0; shipsIndex < this.ships.length; shipsIndex++) {
+            for (let coordinatesIndex = 0; coordinatesIndex < this.ships[shipsIndex].Coordinates.length; coordinatesIndex++) {
+                for(let testIndex = 0; testIndex < testCoordinates.length; testIndex++){
+                    if(this.ships[shipsIndex].Coordinates[coordinatesIndex].equals(testCoordinates[testIndex])) {
+                        this.ships[shipsIndex].Coordinates[coordinatesIndex].setTouched(true);
+                        return {
+                            shipIndex: shipsIndex,
+                            coordinatesIndex: coordinatesIndex 
+                        }              
+                    }
+                }
+            }   
+                     
+        }    
+        
+       // console.log('false and finish');
+      return null;
     }
 
     setupShips = () => {
@@ -128,7 +165,10 @@ class Ships {
 
 class Game extends Component { 
     state = {
-        attempts: 0
+        attempts: 0,
+        playing: true,
+        gameOver: false,
+        gameWon: false
     }   
     constructor(props){
         super(props);
@@ -152,29 +192,61 @@ class Game extends Component {
             return (row === attempt.Row && column === attempt.Column);
         });
        
-        if (!exists) {
-            this.attempts.push({Row: row, Column: column});
-            this.increaseAttempts();
+        if (!exists) {            
             let pointClicked = [];
             pointClicked.push(new Coordinate(row, column, true));
-           // console.log(pointClicked);
-            let overlaps = this.setupShips.checkOverlaps(pointClicked);
+           
+            let touchedShip = this.setupShips.setShipTouched(pointClicked);
             
-            if(overlaps) {
+            if(touchedShip != null) {
+                console.log(touchedShip);
+                if(this.setupShips.ships[touchedShip.shipIndex].Sunk) {
+                    //Check if all ship are sunk
+                    let gameWon = this.setupShips.allShipsSunk();
+
+                    if(gameWon) {
+                        this.setState({playing: false, gameWon: true});
+                    }
+
+                }
+
                 return 'L'; //Land
             } else {
+                //only increase attempts when water is clicked
+                //if maximum attemps reached then game over
+                this.attempts.push({Row: row, Column: column});
+                this.increaseAttempts();
+                
+
+                if(this.props.MaximumAttemptsAllowed !== -1 && this.props.MaximumAttemptsAllowed <= this.Attempts) {
+                    this.setState({playing: false, gameOver: true});
+                }
+
+
                 return 'W'; //Water
             }
         }else {
             console.log('repited attempt');
         }        
-    }      
+    }    
+    
+    tryAgain = () => {
+        this.setupShips.setupShips();
+        this.attempts = [];
+        this.setState({attempts: 0, playing: true, gameOver: false, gameWon: false});
+    }
 
     render() {
         return (
+            
             <div>
-                <StatusSnippet UserName={this.props.Name} MaximumAttempts={this.props.NumberOfAttemps} Level={this.props.Level} Attempts={this.state.attempts} />
-                <Board Rows={this.props.Rows} Columns={this.props.Columns} CheckPointClicked={this.checkPointClicked} />                
+                {(this.state.playing) && ( <div>
+                        <StatusSnippet UserName={this.props.Name} NumberOfAttemps={this.props.NumberOfAttemps} Level={this.props.Level} Attempts={this.state.attempts} />
+                        <Board Rows={this.props.Rows} Columns={this.props.Columns} CheckPointClicked={this.checkPointClicked} />     
+                    </div>)}   
+                {(this.state.gameWon) && ( <div><h1>You Won the Game!! Congrats!</h1><button onClick={this.tryAgain}>Play Again</button></div>)}
+                {(this.state.gameOver) && ( <div><h1>Game Over!</h1><button onClick={this.tryAgain}>Try Again</button></div>)}
+
             </div>);
     }
 }
