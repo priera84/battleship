@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Board from './Board';
 import StatusSnippet from './StatusSnippet';
+import { Link } from 'react-router-dom';
 
 class Coordinate {
     constructor(x, y, touched) {
@@ -244,8 +245,8 @@ class Game extends Component {
                         <StatusSnippet UserName={this.props.Name} NumberOfAttemps={this.props.NumberOfAttemps} Level={this.props.Level} Attempts={this.state.attempts} />
                         <Board Rows={this.props.Rows} Columns={this.props.Columns} CheckPointClicked={this.checkPointClicked} />     
                     </div>)}   
-                {(this.state.gameWon) && ( <div><h1>You Won the Game!! Congrats!</h1><button onClick={this.tryAgain}>Play Again</button></div>)}
-                {(this.state.gameOver) && ( <div><h1>Game Over!</h1><button onClick={this.tryAgain}>Try Again</button></div>)}
+                {(this.state.gameWon) && ( <div className="center"><h1>You Won the Game!! Congrats!</h1><Link className="button" to="/">Play New Game</Link><p></p><button className="button" onClick={this.tryAgain}>Play Again</button></div>)}
+                {(this.state.gameOver) && ( <div className="center"><h1>Game Over!</h1><button  className="button" onClick={this.tryAgain}>Try Again</button></div>)}
 
             </div>);
     }

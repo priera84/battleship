@@ -1,3 +1,8 @@
+.center {
+  margin: auto;
+  width: 60%;
+}
+
 img {
   display: block;
   margin-left: auto;
@@ -21,18 +26,19 @@ fieldset {
     background: green;
 }
 
-.submitButton {
+.button {
   background-color: blue;
   color: white;
   border: 1px solid blue;
   border-radius: 10px;
-  width: 150px;
+  width: auto;
   height: 50px;
   margin: auto;
   margin-top: 20px;
+  padding: 5px;
 }
 
-.submitButton:hover {
+.button:hover {
   background-color: red;
   color: white;
   border: 1px solid blue;

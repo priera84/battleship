@@ -77,7 +77,7 @@ class GameSetup extends Component {
                         <option value="hard">Hard (50 attemps)</option>
                     </select>                    
                     </fieldset>
-                    <input className="submitButton" type="submit" value="Start game"/>
+                    <input className="button" type="submit" value="Start game"/>
                 </form>
             </div>
         );
