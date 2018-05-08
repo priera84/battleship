@@ -1,31 +1,55 @@
-.header {
-  margin: auto;
-  width: 60%;
-  border: 1px solid black;
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 400px;
 }
 
 .form {
+  border-radius: 25px;
+  background: #73AD21;
+  width: 500px;
+  height: 325px; 
   padding: 20px;
-  width: 60%;
   border: 1px solid grey;
   margin: auto;
+  color: white;
+}
+
+fieldset {
+    border: 1px solid greenyellow;
+    background: green;
 }
 
 .submitButton {
-  width: 100px;
   background-color: blue;
   color: white;
-  margin: 50px 50px 50px 50px;
   border: 1px solid blue;
+  border-radius: 10px;
+  width: 150px;
+  height: 50px;
+  margin: auto;
+  margin-top: 20px;
 }
 
 .submitButton:hover {
-  width: 100px;
   background-color: red;
   color: white;
-  margin: 50px 50px 50px 50px;
   border: 1px solid blue;
 }
+
+label {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+input {
+  margin: 20px;
+  width: 200px;
+  display: block;
+}
+
+
 
 .board {
   width: fit-content;
@@ -57,10 +81,12 @@
 }
 
 .snippet {
-  background-color: brown;
+  background-color: #73AD21;
   border: 3px solid blue; 
+  border-radius: 20px;
   margin: auto;
   margin-top: 50px;
   margin-bottom: 50px;
   width: 30%;
+  color: white;
 }

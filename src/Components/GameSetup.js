@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 
 
@@ -13,7 +14,7 @@ class GameSetup extends Component {
     handleSubmit = (event) => {
       event.preventDefault();
       if (this.state.level === "setup" && this.state.numberOfAttemps === 0) {
-          alert('you should either select a level or introduce the number of attempts you wanna try');
+          alert('You should either select a level or introduce the number of attempts you wanna try');
           return false;
       }
 
@@ -36,17 +37,21 @@ class GameSetup extends Component {
         return (
             <div className="form">
                 <form onSubmit={this.handleSubmit}>
-                    <label>Introduce your Name <input type="text" placeholder="Enter your Name" required onChange={this.onNameChange}/>
-                    </label>
-                    <p/>
+                    <fieldset>
+                        <legend>Personal Information</legend>
+                        <label>Introduce your Name: <input type="text" placeholder="Enter your Name" required onChange={this.onNameChange}/>   </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Game Setup</legend>
                     <label>Introduce the number of attemps you want to try:</label>
-                    <input type="number" placeholder="Enter number of attemps" onChange={this.onNumberOfAttempsChange} /><p/>
+                    <input type="number" max="100" min="0" placeholder="Enter number of attemps" onChange={this.onNumberOfAttempsChange} /><p/>
                     <label>or select a Level </label><select value={this.state.level} onChange={this.onChangeLevel}>
                         <option value="setup"></option>
                         <option value="easy">Easy (Infinite attemps)</option>
                         <option value="medium">Medium (100 attemps)</option>
                         <option value="hard">Hard (50 attemps)</option>
-                    </select>
+                    </select>                    
+                    </fieldset>
                     <input className="submitButton" type="submit" value="Start game"/>
                 </form>
             </div>

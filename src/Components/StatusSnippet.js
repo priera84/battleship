@@ -25,8 +25,9 @@ class StatusSnippet extends Component {
            
             <div className="snippet">
                 <p>User Name: {this.props.UserName}</p>
-                <p>Attempts: {this.props.Attempts} out of {MaximumAttempts}</p>
                 { this.props.Level !== "setup" && (<p>Level: {this.props.Level}</p>)}
+                <p>Attempts: {this.props.Attempts} out of {MaximumAttempts}</p>
+               
             </div>
         );
     }
