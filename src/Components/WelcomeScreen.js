@@ -5,7 +5,7 @@ class WelcomeScreen extends Component {
     render() {
         return (
             <div>
-                <img src={battleship} alt="Battleship" />
+                <img className="imgWelcome" src={battleship} alt="Battleship" />
             </div>)
     }
 }

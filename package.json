@@ -8,12 +8,21 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4",
+    "react-sound": "^1.2.0",
     "webpack": "^3.11.0"
   },
   "scripts": {
     "start": "react-scripts start",
+    "lint": "esw -w  ",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1",
+    "eslint-plugin-react": "^7.8.2",
+    "eslint-watch": "^3.1.4",
+    "why-did-you-update": "^0.1.1"
   }
 }

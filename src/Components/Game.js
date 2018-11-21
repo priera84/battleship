@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Board from './Board';
 import StatusSnippet from './StatusSnippet';
+import ShipSnippet from './ShipSnippet';
+
 import { Link } from 'react-router-dom';
 
 class Coordinate {
@@ -17,6 +19,10 @@ class Coordinate {
     setTouched = (touched) => {
         this.touched = touched;
     }
+
+    get Touched() {
+        return this.touched;
+    }
     
 }
 
@@ -28,6 +34,10 @@ class Ship {
 
     get Coordinates() {
         return this.coordinates;
+    }
+
+    get Length() {
+        return this.length;
     }
 
     get Sunk() {
@@ -164,17 +174,19 @@ class Ships {
     }
 }
 
-class Game extends Component { 
+class Game extends React.PureComponent { 
     state = {
         attempts: 0,
+        touches: 0,
         playing: true,
         gameOver: false,
         gameWon: false
-    }   
+    }  
+    
     constructor(props){
         super(props);
-        this.setupShips = new Ships(this.props.Rows, this.props.Columns);
-        this.setupShips.setupShips();
+        this.gameShips = new Ships(this.props.Rows, this.props.Columns);
+        this.gameShips.setupShips();
         this.attempts = [];
     }
 
@@ -184,8 +196,14 @@ class Game extends Component {
 
     increaseAttempts(){
       this.setState((prevState) => {
-           return {attempts: prevState.attempts +1}
+           return {attempts: prevState.attempts + 1}
        });
+    }
+
+    increaseTouches(){
+        this.setState((prevState) => {
+            return {touches: prevState.touches + 1}
+        })
     }
 
     checkPointClicked = (row, column) => {
@@ -197,13 +215,14 @@ class Game extends Component {
             let pointClicked = [];
             pointClicked.push(new Coordinate(row, column, true));
            
-            let touchedShip = this.setupShips.setShipTouched(pointClicked);
+            let touchedShip = this.gameShips.setShipTouched(pointClicked);
             
             if(touchedShip != null) {
-                console.log(touchedShip);
-                if(this.setupShips.ships[touchedShip.shipIndex].Sunk) {
+                this.increaseTouches();
+                
+                if(this.gameShips.ships[touchedShip.shipIndex].Sunk) {
                     //Check if all ship are sunk
-                    let gameWon = this.setupShips.allShipsSunk();
+                    let gameWon = this.gameShips.allShipsSunk();
 
                     if(gameWon) {
                         this.setState({playing: false, gameWon: true});
@@ -232,18 +251,19 @@ class Game extends Component {
     }    
     
     tryAgain = () => {
-        this.setupShips.setupShips();
+        this.gameShips.setupShips();
         this.attempts = [];
-        this.setState({attempts: 0, playing: true, gameOver: false, gameWon: false});
+        this.setState({touches: 0, attempts: 0, playing: true, gameOver: false, gameWon: false});
     }
 
     render() {
         return (
             
             <div>
-                {(this.state.playing) && ( <div>
-                        <StatusSnippet UserName={this.props.Name} NumberOfAttemps={this.props.NumberOfAttemps} Level={this.props.Level} Attempts={this.state.attempts} />
-                        <Board Rows={this.props.Rows} Columns={this.props.Columns} CheckPointClicked={this.checkPointClicked} />     
+                {(this.state.playing) && ( <div className="container">
+                        <StatusSnippet UserName={this.props.Name} NumberOfAttempts={this.props.NumberOfAttemps} Level={this.props.Level} Attempts={this.state.attempts} />
+                        <Board Rows={this.props.Rows} Columns={this.props.Columns} CheckPointClicked={this.checkPointClicked} />
+                        <ShipSnippet  Touches={this.state.touches} GameShips={this.gameShips.ships} /> 
                     </div>)}   
                 {(this.state.gameWon) && ( <div className="center"><h1>You Won the Game!! Congrats!</h1><Link className="button" to="/">Play New Game</Link><p></p><button className="button" onClick={this.tryAgain}>Play Again</button></div>)}
                 {(this.state.gameOver) && ( <div className="center"><h1>Game Over!</h1><button  className="button" onClick={this.tryAgain}>Try Again</button></div>)}

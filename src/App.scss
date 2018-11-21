@@ -1,14 +1,24 @@
+$app-background: deepskyblue;
+$form-background: #73AD21;
+$button-background-color: blue;
+$button-hover-background-color: red;
+$button-color: white;
+
 body {
   font-family: sans-serif;
-  background: deepskyblue;
+  background: $app-background;
   margin: 10px;
 }
 
+
 .container {
   display: grid;
-  grid-template-areas: "menu menu header header right right" "menu menu main main right right" "menu menu main main right right";
+  grid-template-areas:
+  'menu menu header header right right'
+  'menu menu main main right right'
+  'menu menu main main right right';
   grid-gap: 10px;
-  background-color: deepskyblue;
+  background-color: $app-background;
   padding: 10px;
 }
 
@@ -35,9 +45,9 @@ body {
 
 .form {
   border-radius: 25px;
-  background: #73AD21;
+  background: $form-background;
   width: 500px;
-  height: 375px;
+  height: 375px; 
   padding: 20px;
   border: 1px solid grey;
   margin: auto;
@@ -45,11 +55,10 @@ body {
 }
 
 fieldset {
-  border: 1px solid greenyellow;
-  background: green;
-  margin: 20px;
+    border: 1px solid greenyellow;
+    background: green;
+    margin: 20px;
 }
-
 legend {
   color: black;
   border: 1px solid black;
@@ -57,9 +66,9 @@ legend {
 }
 
 .button {
-  background-color: blue;
-  color: white;
-  border: 1px solid blue;
+  background-color: $button-background-color;
+  color: $button-color;
+  border: 1px solid $button-background-color;
   border-radius: 10px;
   width: auto;
   height: 50px;
@@ -69,9 +78,9 @@ legend {
 }
 
 .button:hover {
-  background-color: red;
-  color: white;
-  border: 1px solid blue;
+  background-color: $button-hover-background-color;
+  color: $button-color;
+  border: 1px solid $button-background-color;
 }
 
 label {
@@ -85,8 +94,10 @@ input {
   display: block;
 }
 
+
+
 .board {
-  background-color: deepskyblue;
+  background-color: $app-background;
   grid-area: main;
 }
 
@@ -115,7 +126,7 @@ input {
 
 .statusSnippet {
   background-color: #73AD21;
-  border: 3px solid blue;
+  border: 3px solid blue; 
   border-radius: 20px;
   width: 400px;
   color: white;
@@ -125,7 +136,7 @@ input {
 
 .shipSnippet {
   background-color: #73AD21;
-  border: 3px solid blue;
+  border: 3px solid blue; 
   border-radius: 20px;
   width: 200px;
   height: 300px;
@@ -133,5 +144,3 @@ input {
   padding: 20px;
   grid-area: right;
 }
-
-/*# sourceMappingURL=src/App.css.map */

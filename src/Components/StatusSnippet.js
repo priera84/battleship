@@ -1,36 +1,28 @@
 import React, { Component } from 'react';
 
-class StatusSnippet extends Component {
-    render() {
-        console.log(this.props.Level);
-        let NumberOfAttemps = null;
-        
-        switch(this.props.Level) {
-            case "easy": 
-                NumberOfAttemps = "infinite";
-                break;
-            case "medium": 
-                NumberOfAttemps = "100";
-                break;
-            case "hard": 
-                NumberOfAttemps = "50";
-                break;
-            case "setup": 
-                NumberOfAttemps = this.props.NumberOfAttemps.toString();
-                break;
-            default:
-                break;
-        }
-        return (
-           
-            <div className="snippet">
-                <p>User Name: {this.props.UserName}</p>
-                { this.props.Level !== "setup" && (<p>Level: {this.props.Level}</p>)}
-                <p>Attempts: {this.props.Attempts} out of {NumberOfAttemps}</p>
-               
-            </div>
-        );
+const getNumberOfAttemptsAsString = (level, numberOfAttemps) => {
+    switch(level) {
+        case "easy": 
+            return "infinite";               
+        case "medium": 
+            return "100";
+        case "hard":
+            return "50";
+        case "setup": 
+            return numberOfAttemps.toString();           
+        default:
+          return null;
     }
+}
+
+const StatusSnippet = (props) => {        
+    return (           
+        <div className="statusSnippet">
+            <p>User Name: {props.UserName}</p>
+            { props.Level !== "setup" && (<p>Level: {props.Level}</p>)}
+            <p>Attempts: {props.Attempts} out of {getNumberOfAttemptsAsString(props.Level, props.NumberOfAttempts)}</p>                  
+        </div>
+    );
 }
 
 export default StatusSnippet;
